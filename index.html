@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width,initial-scale=1" name="viewport">
+  <title>FilmFrei TikTok</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+    }
+
+    body {
+      background-color: #121212;
+      color: #f5f5f5;
+      overflow-x: hidden;
+      padding-top: 20px;
+    }
+
+    .alert {
+      margin: 20px auto;
+      max-width: 700px;
+      background-color: #3a1a1a;
+      color: #fff1f1;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+      position: relative;
+      text-align: center
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 15px 0;
+      margin-bottom: 20px;
+    }
+
+    .nav-button {
+      background-color: #0a84ff;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 25px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-button:hover {
+      background-color: #0071e3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .brand-name {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -.5px;
+      margin-bottom: 10px;
+    }
+
+    .tiktok-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .tiktok-profile {
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .profile-header {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      width: 100%;
+    }
+
+    .profile-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .username-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    .profile-username {
+      color: #ccc;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .profile-username:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .copy-icon {
+      margin-left: 8px;
+      width: 16px;
+      height: 16px;
+      fill: #999;
+      cursor: pointer;
+    }
+
+    .profile-bio {
+      line-height: 1.6;
+      font-size: 16px;
+      margin: 0 auto;
+      max-width: 500px;
+      color: #ddd;
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background-color: rgba(10, 132, 255, 0.9);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .copy-notification.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .nav-button {
+        width: 80%;
+      }
+      
+      .profile-pic {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .profile-name {
+        font-size: 20px;
+      }
+      
+      .profile-username {
+        font-size: 16px;
+      }
+      
+      .profile-bio {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Kopier-Benachrichtigung -->
+  <div class="copy-notification" id="copyNotification">
+    Benutzername kopiert!
+  </div>
+
+  <!-- Die permanente DNS-Meldung (ohne X zum Schließen) -->
+  <div class="alert">
+    <strong>Liebe FilmFrei-User,</strong><br>
+    Einige Anbieter blockieren uns. Wenn Sie betroffen sind, lesen Sie unseren 
+    <a href="https://filmfrei.github.io/FilmFrei-DNS" style="color: #3498db; text-decoration: underline; font-weight: bold;">Artikel</a> 
+    zur Lösung des Problems.<br>
+    <strong>Danke für euer Vertrauen – euer FilmFrei-Team</strong>
+  </div>
+
+  <!-- Navigation Buttons zu Filmen und Serien -->
+  <div class="nav-buttons">
+    <a href="https://filmfrei.github.io/FilmFrei" class="nav-button">FilmFrei</a>
+    <a href="https://filmfrei.github.io/FilmFrei-Serien" class="nav-button">FilmFrei-Serien</a>
+  </div>
+
+  <header>
+    <div class="brand-name">FilmFrei TikTok</div>
+  </header>
+
+  <div class="tiktok-container">
+    <div class="tiktok-profile">
+      <div class="profile-header">
+        <div class="profile-pic">
+          <img src="https://i.ibb.co/mCCTsj5/FAB41-ED7-58-E2-4-C9-F-9524-D4-F1-D09370-AD.jpg" alt="FilmFrei Logo">
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">FilmFrei Official</h1>
+          <div class="username-container">
+            <div class="profile-username" id="usernameText" onclick="copyUsername()">@filmfreigermany</div>
+            <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" onclick="copyUsername()">
+              <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="profile-bio">
+        🎬 Filme & Serien ohne Werbung! 🎬<br>
+        ⭐ Beliebte Filme jetzt auf filmfrei.github.io/FilmFrei<br>
+        📺 Serien findest du auf filmfrei.github.io/FilmFrei-Serien<br>
+        🔧 Probleme mit dem Zugriff? Lösung: filmfrei.github.io/FilmFrei-DNS
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 FilmFrei – Alle Rechte vorbehalten</footer>
+
+  <script>
+    // Hintergrund-Animation mit Farbverlauf
+    const body = document.querySelector('body');
+    let gradientPosition = 0;
+
+    function animateGradient() {
+      gradientPosition = (gradientPosition + 0.2) % 360;
+      const gradient = 
+        `radial-gradient(circle at ${50 + Math.sin(gradientPosition * Math.PI / 180) * 10}% ${50 + Math.cos(gradientPosition * Math.PI / 180) * 10}%, rgba(10, 132, 255, 0.03), transparent 60%)`;
+      body.style.backgroundImage = gradient;
+      requestAnimationFrame(animateGradient);
+    }
+
+    // Animation starten
+    animateGradient();
+    
+    // Benutzernamen kopieren Funktion
+    function copyUsername() {
+      const username = document.getElementById('usernameText').innerText;
+      navigator.clipboard.writeText(username)
+        .then(() => {
+          showCopyNotification();
+        })
+        .catch(err => {
+          console.error('Fehler beim Kopieren:', err);
+        });
+    }
+    
+    // Kopier-Benachrichtigung anzeigen
+    function showCopyNotification() {
+      const notification = document.getElementById('copyNotification');
+      notification.classList.add('show');
+      
+      // Nach 2 Sekunden ausblenden
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
